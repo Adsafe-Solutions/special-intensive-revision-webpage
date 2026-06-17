@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIR Category Checker</title>
+<style>
+  :root{
+    --blue:#2f6fd1;
+    --blue-dark:#23529e;
+    --green:#3f8f3f;
+    --green-soft:#e8f5e9;
+    --green-line:#bfe0c0;
+    --red:#d8392b;
+    --red-soft:#fdecea;
+    --red-line:#f3c2bc;
+    --ink:#1f2a37;
+    --muted:#5c6b7a;
+    --line:#e3e8ef;
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --shadow:0 10px 30px rgba(31,42,55,.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 16px 60px;}
+
+  /* Header */
+  header.hero{
+    background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);
+    color:#fff;
+    text-align:center;
+    padding:40px 18px 46px;
+  }
+  .brand{
+    display:inline-flex;align-items:center;gap:10px;
+    background:rgba(255,255,255,.14);
+    padding:6px 16px;border-radius:999px;
+    font-weight:700;letter-spacing:2px;font-size:14px;margin-bottom:16px;
+  }
+  .brand svg{width:18px;height:18px;}
+  header.hero h1{margin:0;font-size:clamp(26px,6vw,40px);font-weight:800;letter-spacing:.5px;}
+  header.hero p.sub{margin:10px auto 0;max-width:560px;font-size:clamp(14px,3.6vw,17px);opacity:.95;}
+  .topnav{display:flex;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap;}
+  .navbtn{
+    border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;
+    padding:10px 18px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,.14);color:#fff;transition:.18s ease;
+  }
+  .navbtn svg{width:16px;height:16px;}
+  .navbtn:hover{background:rgba(255,255,255,.26);}
+  .navbtn.active{background:#fff;color:var(--blue-dark);}
+  .page{display:none;}
+  .page.active{display:block;}
+  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px;}
+  .chip{
+    width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+    font-weight:800;font-size:18px;color:#fff;box-shadow:0 4px 10px rgba(0,0,0,.18);
+  }
+  .chip.g{background:var(--green);}
+  .chip.r{background:var(--red);}
+
+  /* Cards */
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:24px;margin-top:-26px;position:relative;
+  }
+  .card + .card{margin-top:20px;}
+  .section-head{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  .section-head .ic{
+    width:38px;height:38px;border-radius:10px;background:#eef4fd;color:var(--blue);
+    display:grid;place-items:center;flex:0 0 auto;
+  }
+  .section-head .ic svg{width:22px;height:22px;}
+  .section-head h2{margin:0;font-size:19px;font-weight:800;}
+  .section-sub{margin:0 0 18px 50px;color:var(--muted);font-size:14px;}
+  @media(max-width:520px){.section-sub{margin-left:0;}}
+
+  /* Questions */
+  .q{padding:18px 0;border-top:1px solid var(--line);}
+  .q:first-of-type{border-top:none;padding-top:6px;}
+  .q .qtext{font-weight:600;font-size:15.5px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;}
+  .q .qnum{
+    flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--blue);
+    color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center;margin-top:1px;
+  }
+  .options{display:flex;gap:12px;flex-wrap:wrap;padding-left:34px;}
+  @media(max-width:520px){.options{padding-left:0;}}
+  .opt{flex:1 1 130px;min-width:120px;}
+  .opt input{position:absolute;opacity:0;pointer-events:none;}
+  .opt label{
+    display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+    border:2px solid var(--line);border-radius:12px;padding:13px 12px;font-weight:700;
+    font-size:15px;background:#fbfdff;transition:.18s ease;user-select:none;color:var(--ink);
+  }
+  .opt label svg{width:18px;height:18px;}
+  .opt.yes input:checked + label{border-color:var(--green);background:var(--green-soft);color:var(--green);}
+  .opt.no  input:checked + label{border-color:var(--red);background:var(--red-soft);color:var(--red);}
+  .opt label:hover{border-color:#c3d3e8;}
+  .q.locked{opacity:.45;pointer-events:none;}
+  .q .hint{font-size:12.5px;color:var(--muted);padding-left:34px;margin-top:8px;}
+  @media(max-width:520px){.q .hint{padding-left:0;}}
+
+  /* Buttons */
+  .actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+  .btn{
+    flex:1 1 160px;border:none;border-radius:12px;padding:15px 18px;font-size:16px;
+    font-weight:800;cursor:pointer;transition:.18s ease;letter-spacing:.3px;
+  }
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 8px 18px rgba(47,111,209,.28);}
+  .btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px);}
+  .btn-ghost{background:#eef2f7;color:var(--ink);}
+  .btn-ghost:hover{background:#e2e8f0;}
+
+  /* Result */
+  #result{margin-top:20px;display:none;}
+  #result.show{display:block;animation:rise .4s ease;}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .result-card{border-radius:16px;padding:26px;text-align:center;border:2px solid;}
+  .result-card.green{background:var(--green-soft);border-color:var(--green-line);}
+  .result-card.red{background:var(--red-soft);border-color:var(--red-line);}
+  .badge{
+    width:84px;height:84px;border-radius:18px;margin:0 auto 14px;display:grid;place-items:center;
+    font-size:44px;font-weight:900;color:#fff;box-shadow:0 10px 22px rgba(0,0,0,.18);
+  }
+  .badge.green{background:var(--green);}
+  .badge.red{background:var(--red);}
+  .result-card h3{margin:0 0 6px;font-size:20px;}
+  .result-card .label{font-weight:800;text-transform:uppercase;letter-spacing:1px;font-size:13px;}
+  .result-card.green .label{color:var(--green);}
+  .result-card.red .label{color:var(--red);}
+  .result-card p.msg{margin:8px auto 0;max-width:480px;font-size:15.5px;color:var(--ink);}
+  .result-card .docnote{
+    margin:16px auto 0;max-width:520px;font-size:13.5px;background:#fff;border-radius:12px;
+    padding:12px 14px;color:var(--muted);border:1px dashed var(--red-line);text-align:left;
+  }
+  .result-card .docnote b{color:var(--red);}
+
+  /* Explanation grid */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;}
+  @media(max-width:560px){.grid{grid-template-columns:1fr;}}
+  .ex{
+    border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:flex-start;
+    background:#fcfdff;
+  }
+  .ex .let{
+    flex:0 0 auto;width:40px;height:40px;border-radius:10px;color:#fff;font-weight:900;font-size:20px;
+    display:grid;place-items:center;
+  }
+  .ex.green .let{background:var(--green);}
+  .ex.red .let{background:var(--red);}
+  .ex .t{font-weight:700;font-size:14px;margin-bottom:2px;}
+  .ex.green .t{color:var(--green);}
+  .ex.red .t{color:var(--red);}
+  .ex .d{font-size:13px;color:var(--muted);}
+
+  /* Note */
+  .note{
+    display:flex;gap:12px;align-items:flex-start;background:#fff7e6;border:1px solid #f3e0b3;
+    border-radius:12px;padding:14px 16px;margin-top:22px;font-size:13.5px;color:#7a5b13;
+  }
+  .note svg{width:22px;height:22px;flex:0 0 auto;color:#caa11e;}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px;}
+
+  /* ACE confirmed-category detail section */
+  .ace-card{
+    background:linear-gradient(135deg,#eef8ee 0%,#e4f3e6 100%);
+    border:2px solid var(--green-line);
+  }
+  .ace-intro{margin:0 0 4px 50px;color:var(--green);font-weight:700;font-size:14px;}
+  @media(max-width:520px){.ace-intro{margin-left:0;}}
+  .ace-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px;}
+  @media(max-width:680px){.ace-grid{grid-template-columns:1fr;}}
+  .ace{
+    background:#fff;border-radius:14px;border:1px solid var(--green-line);overflow:hidden;
+    box-shadow:0 6px 16px rgba(63,143,63,.10);display:flex;flex-direction:column;
+  }
+  .ace-top{display:flex;align-items:center;gap:10px;padding:13px 14px;color:#fff;}
+  .ace.cA .ace-top{background:#2f6fd1;}
+  .ace.cC .ace-top{background:#5a9e3c;}
+  .ace.cE .ace-top{background:#7a4ca0;}
+  .ace-top .l{
+    flex:0 0 auto;width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.22);
+    display:grid;place-items:center;font-weight:900;font-size:19px;
+  }
+  .ace-top .born{font-size:12px;font-weight:700;line-height:1.3;opacity:.96;}
+  .ace-body{padding:14px;flex:1;}
+  .ace-need{
+    display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:12.5px;
+    border-radius:999px;padding:4px 11px;margin-bottom:10px;
+  }
+  .ace.cA .ace-need{background:#e8f1fc;color:#23529e;}
+  .ace.cC .ace-need{background:#eaf5e3;color:#4d8a2f;}
+  .ace.cE .ace-need{background:#f1eaf7;color:#6a3d92;}
+  .ace-fields{list-style:none;margin:0 0 10px;padding:0;}
+  .ace-fields li{font-size:13px;color:var(--ink);padding:3px 0 3px 18px;position:relative;}
+  .ace-fields li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--green);}
+  .ace.cA .ace-fields li::before{background:#2f6fd1;}
+  .ace.cE .ace-fields li::before{background:#7a4ca0;}
+  .ace-parents{font-size:12.5px;border-radius:10px;padding:9px 11px;line-height:1.45;}
+  .ace.cA .ace-parents{background:#f3f7fc;color:#3a4a5e;}
+  .ace.cC .ace-parents{background:#f3f9ef;color:#3a5230;}
+  .ace.cE .ace-parents{background:#f7f3fb;color:#46355a;}
+  .ace-parents .op{font-weight:900;padding:0 4px;}
+  .ace.cC .ace-parents .op{color:#4d8a2f;}
+  .ace.cE .ace-parents .op{color:#6a3d92;}
+
+  /* Documents page */
+  .key-doc{
+    display:flex;gap:14px;align-items:flex-start;background:var(--green-soft);
+    border:2px solid var(--green-line);border-radius:14px;padding:16px 18px;margin-top:4px;
+  }
+  .key-doc .kic{
+    flex:0 0 auto;width:42px;height:42px;border-radius:10px;background:var(--green);color:#fff;
+    display:grid;place-items:center;
+  }
+  .key-doc .kic svg{width:24px;height:24px;}
+  .key-doc .kt{font-weight:800;color:var(--green);font-size:15px;margin-bottom:2px;}
+  .key-doc .kd{font-size:13.5px;color:var(--ink);}
+  .doclist{list-style:none;margin:14px 0 0;padding:0;counter-reset:doc;}
+  .doclist li{
+    display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-top:1px solid var(--line);
+    font-size:14.5px;
+  }
+  .doclist li:first-child{border-top:none;}
+  .doclist li.hot{
+    background:#fff7e6;border-radius:10px;padding:13px 14px;border-top:none;margin:4px 0;
+    border:1px solid #f0d68a;
+  }
+  .doclist li.hot + li{border-top:1px solid var(--line);}
+  .doclist li::before{
+    counter-increment:doc;content:counter(doc);flex:0 0 auto;width:28px;height:28px;border-radius:8px;
+    background:#eef4fd;color:var(--blue);font-weight:800;font-size:13px;display:grid;place-items:center;
+  }
+  .doclist li.hot::before{background:#e8a317;color:#fff;}
+  .doctxt{flex:1;}
+  .hot-tag{
+    display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:11.5px;font-weight:800;
+    letter-spacing:.3px;color:#8a5a00;background:#ffe7a8;padding:3px 9px;border-radius:999px;
+  }
+  .hot-tag svg{width:12px;height:12px;}
+  .legend{
+    display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:#8a5a00;
+    background:#fff7e6;border:1px solid #f0d68a;border-radius:999px;padding:7px 14px;font-weight:600;
+  }
+  .legend .dot{width:14px;height:14px;border-radius:4px;background:#e8a317;flex:0 0 auto;}
+  .photos-note{
+    display:flex;gap:12px;align-items:center;background:#fff7e6;border:1px solid #f3e0b3;
+    border-radius:12px;padding:13px 16px;margin-top:16px;font-size:14px;color:#7a5b13;font-weight:600;
+  }
+  .photos-note svg{width:22px;height:22px;flex:0 0 auto;color:#caa11e;}
+  .submit-rule{
+    background:#eef4fd;border:1px solid #cfe0f7;border-radius:12px;padding:14px 16px;
+    font-size:13.5px;color:var(--blue-dark);margin-top:6px;
+  }
+  .step-row{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line);}
+  .step-row:first-of-type{border-top:none;}
+  .step-row .sn{
+    flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;
+    font-weight:800;display:grid;place-items:center;
+  }
+  .step-row .st{font-weight:700;font-size:15px;margin-bottom:2px;}
+  .step-row .sd{font-size:13.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+    SIR · SPECIAL INTENSIVE REVISION
+  </div>
+  <h1>SIR Category Checker</h1>
+  <p class="sub">Check whether you fall under A, B, C, D, E, or F category</p>
+  <div class="topnav">
+    <button class="navbtn active" id="navChecker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Category Checker
+    </button>
+    <button class="navbtn" id="navDocs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+      Accepted Documents
+    </button>
+  </div>
+  <div class="chips">
+    <span class="chip g">A</span><span class="chip r">B</span>
+    <span class="chip g">C</span><span class="chip r">D</span>
+    <span class="chip g">E</span><span class="chip r">F</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ PAGE 1: CHECKER ============ -->
+  <div class="page active" id="pageChecker">
+
+  <!-- FORM -->
+  <section class="card">
+    <div class="section-head">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
+      <h2>Answer a few simple questions</h2>
+    </div>
+    <p class="section-sub">Answer in order. Some questions open up based on your earlier answers.</p>
+
+    <!-- Q1 -->
+    <div class="q" id="q1">
+      <div class="qtext"><span class="qnum">1</span><span>Is your own name in the <b>2002 voter list</b>?</span></div>
+      <div class="options">
+        <div class="opt yes"><input type="radio" name="q1" id="q1y" value="yes"><label for="q1y">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Yes</label></div>
+        <div class="opt no"><input type="radio" name="q1" id="q1n" value="no"><label for="q1n">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>No</label></div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q locked" id="q2">
+      <div class="qtext"><span class="qnum">2</span><span>Is <b>at least one parent's</b> name in the 2002 voter list?</span></div>
+      <div class="options">
+        <div class="opt yes"><input type="radio" name="q2" id="q2y" value="yes"><label for="q2y">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Yes</label></div>
+        <div class="opt no"><input type="radio" name="q2" id="q2n" value="no"><label for="q2n">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>No</label></div>
+      </div>
+      <div class="hint">Answer this if your own name is <b>not</b> in the 2002 list.</div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q locked" id="q3">
+      <div class="qtext"><span class="qnum">3</span><span>Are <b>both parents'</b> names in the 2002 voter list?</span></div>
+      <div class="options">
+        <div class="opt yes"><input type="radio" name="q3" id="q3y" value="yes"><label for="q3y">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>Yes</label></div>
+        <div class="opt no"><input type="radio" name="q3" id="q3n" value="no"><label for="q3n">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>No</label></div>
+      </div>
+      <div class="hint">Answer this only if you said at least one parent is listed.</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="submitBtn">Check My Category</button>
+      <button class="btn btn-ghost" id="resetBtn">Reset</button>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result"></div>
+  </section>
+
+  <!-- EXPLANATION -->
+  <section class="card">
+    <div class="section-head">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+      <h2>What each category means</h2>
+    </div>
+    <p class="section-sub"><b style="color:var(--green)">Green</b> = safe / confirmed &nbsp;·&nbsp; <b style="color:var(--red)">Red</b> = pending / documents may be required</p>
+    <div class="grid">
+      <div class="ex green"><div class="let">A</div><div><div class="t">Category A — Confirmed</div><div class="d">Your name exists in the 2002 voter list.</div></div></div>
+      <div class="ex red"><div class="let">B</div><div><div class="t">Category B — Pending</div><div class="d">Your name does not exist in the 2002 voter list. Documents may be required.</div></div></div>
+      <div class="ex green"><div class="let">C</div><div><div class="t">Category C — Confirmed</div><div class="d">At least one parent exists in the 2002 voter list.</div></div></div>
+      <div class="ex red"><div class="let">D</div><div><div class="t">Category D — Pending</div><div class="d">Parent details are not available in the 2002 voter list. Documents may be required.</div></div></div>
+      <div class="ex green"><div class="let">E</div><div><div class="t">Category E — Confirmed</div><div class="d">Both parents exist in the 2002 voter list.</div></div></div>
+      <div class="ex red"><div class="let">F</div><div><div class="t">Category F — Pending</div><div class="d">Both parent details are not available in the 2002 voter list. Documents may be required.</div></div></div>
+    </div>
+  </section>
+
+  </div><!-- /pageChecker -->
+
+  <!-- ============ PAGE 2: ACCEPTED DOCUMENTS ============ -->
+  <div class="page" id="pageDocs">
+
+    <section class="card">
+      <div class="section-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
+        <h2>List of Documents — Keep them Handy</h2>
+      </div>
+      <p class="section-sub">Mainly needed for pending categories (B, D, F). Submit separate self-attested documents for self, father and mother, as applicable. Any <b>one</b> from the list below is treated as sufficient on its own.</p>
+
+      <div class="key-doc">
+        <span class="kic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></span>
+        <div>
+          <div class="kt">Extract of Electoral Roll — Voter ID 2002</div>
+          <div class="kd">This is the <b>most important</b> document. Keep your 2002 voter list extract ready first.</div>
+        </div>
+      </div>
+
+      <ol class="doclist">
+        <li><div class="doctxt">Any Identity Card / Pension Payment Order issued to a regular employee or pensioner of any Central Govt, State Govt or PSU.</div></li>
+        <li><div class="doctxt">Any Identity Card / Certificate / Document issued in India by the Government, Local authorities, Banks, Post Office, LIC or PSUs prior to 01.07.1987.</div></li>
+        <li class="hot"><div class="doctxt">Birth Certificate issued by the competent authority.<span class="hot-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Easily available</span></div></li>
+        <li class="hot"><div class="doctxt">Passport.<span class="hot-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Easily available</span></div></li>
+        <li class="hot"><div class="doctxt">Matriculation / T.C. Certificate issued by recognised Boards or Universities.<span class="hot-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>Easily available</span></div></li>
+        <li><div class="doctxt">Permanent Residence Certificate issued by the competent State authority.</div></li>
+        <li><div class="doctxt">Forest Right Certificate.</div></li>
+        <li><div class="doctxt">OBC / SC / ST or any caste certificate issued by the competent authority.</div></li>
+        <li><div class="doctxt">National Register of Citizens (where it exists).</div></li>
+        <li><div class="doctxt">Family Register prepared by State or Local authorities.</div></li>
+        <li><div class="doctxt">Any Land / House allotment certificate issued by the Government.</div></li>
+      </ol>
+
+      <span class="legend"><span class="dot"></span>Highlighted documents are the most commonly available — easiest to arrange.</span>
+
+      <div class="submit-rule">For Aadhaar, the Commission's directions issued vide letter No. 23/2025-ERS/Vol.II dated 09.09.2025 (Annexure II) shall apply.</div>
+
+      <div class="photos-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+        Also keep <b>2 colour photos</b> ready.
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
+        <h2>How to get your 2025 details</h2>
+      </div>
+      <p class="section-sub">Your 2025 voter details are easy to collect on your phone. The voter ID itself shows EPIC No, Name, Father's Name, Date of Birth and Address — but for SIR you also need AC, Part No and Serial No.</p>
+
+      <div class="step-row">
+        <span class="sn">1</span>
+        <div>
+          <div class="st">Download the ECINET app</div>
+          <div class="sd">Open the Play Store, search for <b>ECINET</b> and install it to collect your 2025 data.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <span class="sn">2</span>
+        <div>
+          <div class="st">Search your name</div>
+          <div class="sd">Find your entry in your voter list — search by your name, or more reliably by your <b>EPIC No</b>.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <span class="sn">3</span>
+        <div>
+          <div class="st">Note the SIR details</div>
+          <div class="sd">From your record, note your <b>AC (Assembly Constituency)</b>, <b>Part No (Booth No)</b> and <b>Serial No</b> — these are what SIR needs.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card ace-card">
+      <div class="section-head">
+        <span class="ic" style="background:var(--green-soft);color:var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
+        <h2>Confirmed categories (A, C, E) — what to fill in</h2>
+      </div>
+      <p class="ace-intro">If you fall under a green category, here is exactly what details your data sheet needs.</p>
+      <p class="section-sub">Everyone notes the same 2025 voter details (Name, EPIC No, AC No, Part No, Serial No). The difference is how much 2002 parent data is required.</p>
+
+      <div class="ace-grid">
+        <!-- A -->
+        <div class="ace cA">
+          <div class="ace-top"><span class="l">A</span><span class="born">Born before<br>01.07.1987</span></div>
+          <div class="ace-body">
+            <span class="ace-need"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><path d="M5 13l4 4L19 7"/></svg>Your own details only</span>
+            <ul class="ace-fields">
+              <li>Name</li><li>EPIC No (2025)</li><li>AC No</li><li>Part No</li><li>Serial No</li><li>Your own 2002 details</li>
+            </ul>
+            <div class="ace-parents"><b>Parents' details not required</b> — however, advisable to keep them handy.</div>
+          </div>
+        </div>
+        <!-- C -->
+        <div class="ace cC">
+          <div class="ace-top"><span class="l">C</span><span class="born">Born between<br>01.07.1987 – 02.12.2004</span></div>
+          <div class="ace-body">
+            <span class="ace-need"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><path d="M5 13l4 4L19 7"/></svg>At least one parent</span>
+            <ul class="ace-fields">
+              <li>Name</li><li>EPIC No (2025)</li><li>AC No</li><li>Part No</li><li>Serial No</li>
+            </ul>
+            <div class="ace-parents">At least <b>one parent's</b> 2002 details required —<br>Father<span class="op">OR</span>Mother (Name, AC No, Part No, Serial No).</div>
+          </div>
+        </div>
+        <!-- E -->
+        <div class="ace cE">
+          <div class="ace-top"><span class="l">E</span><span class="born">Born after<br>02.12.2004</span></div>
+          <div class="ace-body">
+            <span class="ace-need"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><path d="M5 13l4 4L19 7"/></svg>Both parents</span>
+            <ul class="ace-fields">
+              <li>Name</li><li>EPIC No (2025)</li><li>AC No</li><li>Part No</li><li>Serial No</li>
+            </ul>
+            <div class="ace-parents"><b>Both parents'</b> 2002 details required —<br>Father<span class="op">AND</span>Mother (Name, AC No, Part No, Serial No).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /pageDocs -->
+
+  <div class="note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9l-8 14A2 2 0 004 21h16a2 2 0 001.7-3.1l-8-14a2 2 0 00-3.4 0z"/></svg>
+    <span>This tool is only for basic guidance. Please verify your final category and document requirements with official SIR / BLO guidance.</span>
+  </div>
+
+  <footer>SIR — Special Intensive Revision · Category guidance helper</footer>
+</div>
+
+<script>
+  const CATS = {
+    A:{color:"green", title:"Your name is confirmed", msg:"Your name exists in the 2002 voter list.", docs:false},
+    B:{color:"red",   title:"Pending — your name not found", msg:"Your name does not exist in the 2002 voter list. Documents may be required.", docs:true},
+    C:{color:"green", title:"Parent record confirmed", msg:"At least one parent exists in the 2002 voter list.", docs:false},
+    D:{color:"red",   title:"Pending — parent record not found", msg:"Parent details are not available in the 2002 voter list. Documents may be required.", docs:true},
+    E:{color:"green", title:"Both parents confirmed", msg:"Both parents exist in the 2002 voter list.", docs:false},
+    F:{color:"red",   title:"Pending — parent records not found", msg:"Both parent details are not available in the 2002 voter list. Documents may be required.", docs:true}
+  };
+
+  const q1=document.getElementById('q1'), q2=document.getElementById('q2'), q3=document.getElementById('q3');
+  const result=document.getElementById('result');
+
+  function val(name){const el=document.querySelector('input[name="'+name+'"]:checked');return el?el.value:null;}
+  function clearGroup(name){document.querySelectorAll('input[name="'+name+'"]').forEach(i=>i.checked=false);}
+
+  // Adaptive flow: lock/unlock follow-up questions based on earlier answers
+  function refreshFlow(){
+    const a1=val('q1');
+    if(a1==='no'){ q2.classList.remove('locked'); }
+    else { q2.classList.add('locked'); clearGroup('q2'); }
+
+    const a2=val('q2');
+    if(a1==='no' && a2==='yes'){ q3.classList.remove('locked'); }
+    else { q3.classList.add('locked'); clearGroup('q3'); }
+  }
+
+  document.querySelectorAll('input[name="q1"]').forEach(i=>i.addEventListener('change',refreshFlow));
+  document.querySelectorAll('input[name="q2"]').forEach(i=>i.addEventListener('change',refreshFlow));
+
+  function classify(){
+    const a1=val('q1'); const a2=val('q2'); const a3=val('q3');
+    if(!a1) return {error:"Please answer Question 1 first."};
+    if(a1==='yes') return {cat:'A'};
+    // a1 === 'no'  -> need parent info
+    if(!a2) return {error:"Please answer Question 2 about your parents."};
+    if(a2==='no') return {cat:'D'};       // no parent in list -> documents required
+    // at least one parent listed -> Category C confirmed; check if both
+    if(!a3) return {error:"Please answer Question 3 about both parents."};
+    return a3==='yes' ? {cat:'E'} : {cat:'C'};
+  }
+
+  function showError(text){
+    result.className='show';
+    result.innerHTML='<div class="result-card red"><div class="badge red">!</div>'+
+      '<h3>'+text+'</h3><p class="msg">Complete the highlighted questions, then tap “Check My Category”.</p></div>';
+    result.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  function showResult(cat){
+    const c=CATS[cat];
+    let html='<div class="result-card '+c.color+'">'+
+      '<div class="badge '+c.color+'">'+cat+'</div>'+
+      '<div class="label">Category '+cat+(c.docs?' · Pending':' · Confirmed')+'</div>'+
+      '<h3>'+c.title+'</h3>'+
+      '<p class="msg">'+c.msg+'</p>';
+    if(c.docs){
+      html+='<div class="docnote"><b>Next step:</b> Keep one of the accepted documents handy (e.g. birth certificate, passport, '+
+        'matriculation/T.C. certificate, government ID, caste certificate, etc.) plus the 2002 electoral roll extract and 2 colour photos, '+
+        'and complete the enumeration form with your BLO.</div>';
+    }
+    html+='</div>';
+    result.className='show';
+    result.innerHTML=html;
+    result.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  document.getElementById('submitBtn').addEventListener('click',()=>{
+    const r=classify();
+    if(r.error){showError(r.error);return;}
+    showResult(r.cat);
+  });
+
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    ['q1','q2','q3'].forEach(clearGroup);
+    refreshFlow();
+    result.className='';
+    result.innerHTML='';
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  refreshFlow();
+
+  // ---- Page navigation ----
+  const navChecker=document.getElementById('navChecker'), navDocs=document.getElementById('navDocs');
+  const pageChecker=document.getElementById('pageChecker'), pageDocs=document.getElementById('pageDocs');
+  function go(page){
+    const docs = page==='docs';
+    navDocs.classList.toggle('active',docs);
+    navChecker.classList.toggle('active',!docs);
+    pageDocs.classList.toggle('active',docs);
+    pageChecker.classList.toggle('active',!docs);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  navChecker.addEventListener('click',()=>go('checker'));
+  navDocs.addEventListener('click',()=>go('docs'));
+</script>
+</body>
+</html>
