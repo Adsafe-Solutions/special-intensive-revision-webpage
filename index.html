@@ -41,22 +41,64 @@
 
   /* Header */
   header.hero{
-    background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 55%),
+      linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);
     color:#fff;
     text-align:center;
-    padding:40px 18px 46px;
+    padding:34px 18px 44px;
   }
-  .brand{
-    display:inline-flex;align-items:center;gap:10px;
-    background:rgba(255,255,255,.14);
-    padding:6px 16px;border-radius:999px;
-    font-weight:700;letter-spacing:2px;font-size:14px;margin-bottom:16px;
+  .hero-logo{
+    width:62px;height:62px;border-radius:16px;background:#fff;margin:0 auto 14px;
+    display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.22);padding:7px;
   }
-  .brand svg{width:18px;height:18px;}
-  header.hero h1{margin:0;font-size:clamp(26px,6vw,40px);font-weight:800;letter-spacing:.5px;}
-  header.hero p.sub{margin:10px auto 0;max-width:560px;font-size:clamp(14px,3.6vw,17px);opacity:.95;}
+  .hero-logo img{width:100%;height:100%;object-fit:contain;}
+  .loc-pill{
+    display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.28);padding:5px 14px;border-radius:999px;
+    font-weight:700;letter-spacing:1.5px;font-size:12px;text-transform:uppercase;margin-bottom:12px;
+  }
+  .loc-pill svg{width:14px;height:14px;}
+  header.hero h1{margin:0;font-size:clamp(27px,6.4vw,42px);font-weight:800;line-height:1.12;letter-spacing:.3px;}
+  header.hero h1 .lite{display:block;font-weight:600;font-size:.62em;opacity:.92;letter-spacing:.5px;margin-top:2px;}
+  header.hero p.sub{margin:12px auto 0;max-width:540px;font-size:clamp(14px,3.6vw,16px);opacity:.94;}
   .page{display:none;}
   .page.active{display:block;}
+
+  /* Sticky section navbar */
+  .navbar{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);
+    box-shadow:0 4px 18px rgba(15,23,42,.30);
+    border-bottom:3px solid #f5a623;
+  }
+  .navbar-inner{
+    max-width:860px;margin:0 auto;display:flex;gap:10px;padding:13px 14px;
+  }
+  .navlink{
+    flex:1 1 0;min-width:0;border:1px solid rgba(255,255,255,.18);cursor:pointer;font-family:inherit;
+    font-weight:800;font-size:15px;padding:14px 12px;border-radius:13px;text-align:center;
+    color:#e2e8f0;background:rgba(255,255,255,.07);transition:.18s ease;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.2;
+  }
+  .navlink svg{width:19px;height:19px;flex:0 0 auto;}
+  .navlink .lbl-long{display:inline;}
+  .navlink .lbl-short{display:none;}
+  .navlink:hover{background:rgba(255,255,255,.16);color:#fff;transform:translateY(-1px);}
+  .navlink.active{
+    background:#f5a623;color:#3a2702;border-color:#f5a623;
+    box-shadow:0 5px 14px rgba(245,166,35,.40);
+  }
+  /* Mobile: 2x2 grid, all tabs visible, no horizontal scroll */
+  @media(max-width:600px){
+    .navbar-inner{flex-wrap:wrap;gap:8px;padding:11px 11px;}
+    .navlink{flex:1 1 calc(50% - 4px);font-size:14px;padding:13px 8px;}
+    .navlink .lbl-long{display:none;}
+    .navlink .lbl-short{display:inline;}
+  }
+  /* offset anchored scroll so navbar doesn't cover headings */
+  #secSIR,#secCitizen,#checkerForm,#secFAQ{scroll-margin-top:150px;}
+  @media(min-width:601px){#secSIR,#secCitizen,#checkerForm,#secFAQ{scroll-margin-top:86px;}}
   .backbar{margin:18px 0 4px;position:relative;}
   .backbtn{
     border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;
@@ -67,13 +109,23 @@
   .backbtn svg{width:18px;height:18px;}
   .backbtn:hover{background:#f3f7fc;transform:translateX(-2px);}
   .backbar + .card{margin-top:0;}
-  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px;}
+  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:22px;}
   .chip{
-    width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
-    font-weight:800;font-size:18px;color:#fff;box-shadow:0 4px 10px rgba(0,0,0,.18);
+    display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 13px 0 9px;border-radius:999px;
+    font-weight:800;font-size:14px;color:#fff;background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.22);
   }
-  .chip.g{background:var(--green);}
-  .chip.r{background:var(--red);}
+  .chip .dot{
+    width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:900;color:#fff;
+  }
+  .chip.g .dot{background:var(--green);}
+  .chip.r .dot{background:var(--red);}
+  .chip .tag{font-size:11px;font-weight:700;opacity:.9;letter-spacing:.3px;}
+  .chip-legend{display:flex;justify-content:center;gap:18px;margin-top:14px;font-size:12px;opacity:.92;}
+  .chip-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .chip-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+  .chip-legend i.g{background:var(--green);}
+  .chip-legend i.r{background:var(--red);}
 
   /* Cards */
   .card{
@@ -81,6 +133,8 @@
     box-shadow:var(--shadow);padding:24px;margin-top:-26px;position:relative;
   }
   .card + .card{margin-top:20px;}
+  /* first card on checker page sits below the sticky navbar with breathing room */
+  #pageChecker > .card:first-of-type{margin-top:24px;}
   .section-head{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
   .section-head .ic{
     width:38px;height:38px;border-radius:10px;background:#eef4fd;color:var(--blue);
@@ -186,6 +240,75 @@
   .note svg{width:22px;height:22px;flex:0 0 auto;color:#caa11e;}
   footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px;}
 
+  /* FAQ accordion */
+  .faq{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:12px;background:#fcfdff;}
+  .faq:first-of-type{margin-top:4px;}
+  .faq summary{
+    list-style:none;cursor:pointer;display:flex;align-items:flex-start;gap:12px;padding:15px 16px;
+    font-weight:700;font-size:14.5px;color:var(--ink);user-select:none;transition:background .15s ease;
+  }
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary:hover{background:#f3f7fc;}
+  .faq summary .qm{
+    flex:0 0 auto;width:26px;height:26px;border-radius:7px;background:#eef4fd;color:var(--blue);
+    font-weight:800;font-size:14px;display:grid;place-items:center;
+  }
+  .faq summary .qtxt{flex:1;}
+  .faq summary .chev{
+    flex:0 0 auto;width:20px;height:20px;color:var(--muted);transition:transform .2s ease;margin-top:3px;
+  }
+  .faq[open] summary .chev{transform:rotate(180deg);}
+  .faq[open] summary{color:var(--blue-dark);}
+  .faq .ans{padding:0 16px 16px 54px;font-size:13.5px;color:var(--muted);line-height:1.55;}
+  @media(max-width:520px){.faq .ans{padding-left:16px;}}
+  .ans-steps{list-style:none;margin:10px 0 0;padding:0;counter-reset:fstep;}
+  .ans-steps li{position:relative;padding:7px 0 7px 30px;border-top:1px solid var(--line);}
+  .ans-steps li:first-child{border-top:none;}
+  .ans-steps li::before{
+    counter-increment:fstep;content:counter(fstep);position:absolute;left:0;top:7px;
+    width:21px;height:21px;border-radius:6px;background:var(--blue);color:#fff;font-weight:800;
+    font-size:11px;display:grid;place-items:center;
+  }
+  .ans b{color:var(--ink);}
+  .ans-note{margin-top:10px;font-size:12.5px;background:#eef4fd;border-radius:9px;padding:9px 11px;color:var(--blue-dark);}
+
+  /* What is SIR intro */
+  .intro-lead{font-size:15px;color:var(--ink);margin:0 0 4px;}
+  .intro-lead b{color:var(--blue-dark);}
+  .scroll-cta{
+    display:inline-flex;align-items:center;gap:9px;margin-top:18px;border:none;cursor:pointer;
+    font-family:inherit;font-weight:800;font-size:15px;letter-spacing:.3px;padding:14px 24px;border-radius:12px;
+    background:var(--blue);color:#fff;box-shadow:0 8px 18px rgba(47,111,209,.28);transition:.18s ease;
+  }
+  .scroll-cta svg{width:18px;height:18px;}
+  .scroll-cta:hover{background:var(--blue-dark);transform:translateY(-1px);}
+  /* Process timeline */
+  .timeline{margin:18px 0 0;position:relative;padding-left:6px;}
+  .tstep{display:flex;gap:14px;padding:0 0 18px;position:relative;}
+  .tstep:last-child{padding-bottom:0;}
+  .tstep .tline{display:flex;flex-direction:column;align-items:center;flex:0 0 auto;}
+  .tstep .tnum{
+    width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;
+    font-size:14px;display:grid;place-items:center;z-index:1;box-shadow:0 3px 8px rgba(47,111,209,.3);
+  }
+  .tstep .trod{width:2px;flex:1;background:linear-gradient(var(--blue),#cfe0f7);margin:3px 0 -4px;min-height:14px;}
+  .tstep:last-child .trod{display:none;}
+  .tstep .tbody{padding-top:4px;}
+  .tstep .tt{font-weight:800;font-size:15px;margin-bottom:3px;color:var(--ink);}
+  .tstep .td{font-size:13.5px;color:var(--muted);line-height:1.5;}
+  /* Citizen checklist */
+  .citizen{
+    display:flex;gap:13px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line);
+  }
+  .citizen:first-of-type{border-top:none;padding-top:4px;}
+  .citizen .cmark{
+    flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:var(--green-soft);color:var(--green);
+    display:grid;place-items:center;
+  }
+  .citizen .cmark svg{width:20px;height:20px;}
+  .citizen .ct{font-weight:700;font-size:14.5px;margin-bottom:2px;}
+  .citizen .cd{font-size:13.5px;color:var(--muted);line-height:1.5;}
+
   /* ACE confirmed-category detail section */
   .ace-card{
     background:linear-gradient(135deg,#eef8ee 0%,#e4f3e6 100%);
@@ -290,26 +413,159 @@
 <body>
 
 <header class="hero">
-  <div class="brand">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
-    SIR · SPECIAL INTENSIVE REVISION
+  <div class="hero-logo"><img src="data:image/png;base64,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" alt="Election Commission of India"></div>
+  <div class="loc-pill">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Karnataka · SIR
   </div>
-  <h1>Karnataka SIR Category Checker</h1>
-  <p class="sub">Check whether you fall under A, B, C, D, E, or F category</p>
+  <h1>SIR Category Checker<span class="lite">Special Intensive Revision of the Electoral Roll</span></h1>
+  <p class="sub">Answer three simple questions to find out which category &mdash; A to F &mdash; you fall under, and what to do next.</p>
   <div class="chips">
-    <span class="chip g">A</span><span class="chip r">B</span>
-    <span class="chip g">C</span><span class="chip r">D</span>
-    <span class="chip g">E</span><span class="chip r">F</span>
+    <span class="chip g"><span class="dot">A</span><span class="tag">Safe</span></span>
+    <span class="chip r"><span class="dot">B</span><span class="tag">Pending</span></span>
+    <span class="chip g"><span class="dot">C</span><span class="tag">Safe</span></span>
+    <span class="chip r"><span class="dot">D</span><span class="tag">Pending</span></span>
+    <span class="chip g"><span class="dot">E</span><span class="tag">Safe</span></span>
+    <span class="chip r"><span class="dot">F</span><span class="tag">Pending</span></span>
+  </div>
+  <div class="chip-legend">
+    <span><i class="g"></i>Green = confirmed</span>
+    <span><i class="r"></i>Red = documents may be needed</span>
   </div>
 </header>
+
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <button class="navlink active" data-target="secSIR">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lbl-long">About SIR</span><span class="lbl-short">SIR</span>
+    </button>
+    <button class="navlink" data-target="secCitizen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg><span class="lbl-long">What you should do</span><span class="lbl-short">What to do</span>
+    </button>
+    <button class="navlink" data-target="checkerForm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span class="lbl-long">Check my category</span><span class="lbl-short">My category</span>
+    </button>
+    <button class="navlink" data-target="secFAQ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="lbl-long">FAQs</span><span class="lbl-short">FAQs</span>
+    </button>
+  </div>
+</nav>
 
 <div class="wrap">
 
   <!-- ============ PAGE 1: CHECKER ============ -->
   <div class="page active" id="pageChecker">
 
+  <!-- WHAT IS SIR / PROCESS -->
+  <section class="card" id="secSIR">
+    <div class="section-head">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+      <h2>What is SIR &amp; how the process works</h2>
+    </div>
+    <p class="intro-lead"><b>SIR (Special Intensive Revision)</b> is the Election Commission of India's drive to thoroughly clean and update the voter list. The SIR follows a highly regulated, multi-phase timeline to ensure absolute transparency.</p>
+
+    <div class="timeline">
+      <div class="tstep">
+        <div class="tline"><div class="tnum">1</div><div class="trod"></div></div>
+        <div class="tbody"><div class="tt">Official Announcement &amp; Freezing</div>
+          <div class="td">The ECI announces the SIR schedule for specific states / UTs, sets a "qualifying date" for new voters (for example, individuals turning 18), and temporarily freezes the current voter list to set the baseline data.</div></div>
+      </div>
+      <div class="tstep">
+        <div class="tline"><div class="tnum">2</div><div class="trod"></div></div>
+        <div class="tbody"><div class="tt">Pre-Mapping Exercise</div>
+          <div class="td">Officials match current voter records against historical benchmarks (such as the 2002 electoral roll) to flag discrepancies — age-gap anomalies, major name variations, or the same person appearing in multiple households.</div></div>
+      </div>
+      <div class="tstep">
+        <div class="tline"><div class="tnum">3</div><div class="trod"></div></div>
+        <div class="tbody"><div class="tt">Door-to-Door Enumeration &amp; Form Distribution</div>
+          <div class="td">Booth Level Officers (BLOs) visit every household and hand out pre-printed Enumeration Forms carrying the voter's current details.</div></div>
+      </div>
+      <div class="tstep">
+        <div class="tline"><div class="tnum">4</div><div class="trod"></div></div>
+        <div class="tbody"><div class="tt">Form Verification &amp; Collection</div>
+          <div class="td">The BLO visits multiple times to help fill the forms and collect them back. For voters registered after January 2003, supporting documents proving residence and identity are verified.</div></div>
+      </div>
+      <div class="tstep">
+        <div class="tline"><div class="tnum">5</div><div class="trod"></div></div>
+        <div class="tbody"><div class="tt">Publication of the Draft Electoral Roll</div>
+          <div class="td">The ECI compiles all verified data and publishes a "Draft Electoral Roll", available for public viewing online and at designated local centres.</div></div>
+      </div>
+      <div class="tstep">
+        <div class="tline"><div class="tnum">6</div><div class="trod"></div></div>
+        <div class="tbody"><div class="tt">Claims &amp; Objections Window</div>
+          <div class="td">Citizens get a dedicated period to challenge exclusions, fix clerical mistakes, or object to wrongly added names using the prescribed forms (for example, Form 6).</div></div>
+      </div>
+      <div class="tstep">
+        <div class="tline"><div class="tnum">7</div><div class="trod"></div></div>
+        <div class="tbody"><div class="tt">Final Electoral Roll Publication</div>
+          <div class="td">After all claims and objections are resolved, the final, clean voter list is published and locked in for the upcoming elections.</div></div>
+      </div>
+    </div>
+    <button class="scroll-cta" id="toCheckerBtn">
+      Directly jump to find your category
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </button>
+  </section>
+
+  <!-- CITIZEN CHECKLIST -->
+  <section class="card" id="secCitizen">
+    <div class="section-head">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></span>
+      <h2>What should you do as a citizen &amp; voter?</h2>
+    </div>
+    <p class="section-sub">Because SIR involves rigorous data-cleansing, a passive voter risks being accidentally left off the roll. As a responsible citizen, follow these steps.</p>
+
+    <div class="citizen">
+      <span class="cmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
+      <div><div class="ct">Be present for the BLO visit</div><div class="cd">Cooperate with the BLO when they come to your home. Double-check your name, spelling, address and relative details on the pre-filled form.</div></div>
+    </div>
+    <div class="citizen">
+      <span class="cmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></span>
+      <div><div class="ct">Keep documents ready</div><div class="cd">If you registered to vote any time after 2003, keep your identity and address proofs (such as Aadhaar, Voter ID, Passport or utility bills) handy for verification.</div></div>
+    </div>
+    <div class="citizen">
+      <span class="cmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+      <div><div class="ct">Verify online if you missed the visit</div><div class="cd">If you live in a rented home or were away when the BLO came, check your status on the official NVSP (National Voters' Service Portal) or the Voter Helpline App.</div></div>
+    </div>
+    <div class="citizen">
+      <span class="cmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
+      <div><div class="ct">Actively check the Draft Roll</div><div class="cd">Don't assume you're registered just because you voted last time. Review the published Draft Roll during the claims period to make sure your name hasn't been dropped.</div></div>
+    </div>
+  </section>
+
+  <!-- HOW TO GET 2025 DETAILS -->
+  <section class="card" id="sec2025">
+    <div class="section-head">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
+      <h2>How to get your 2025 details</h2>
+    </div>
+    <p class="section-sub">Your 2025 voter details are easy to collect on your phone. The voter ID itself shows EPIC No, Name, Father's Name, Date of Birth and Address — but for SIR you also need AC, Part No and Serial No.</p>
+
+    <div class="step-row">
+      <span class="sn">1</span>
+      <div>
+        <div class="st">Download the ECINET app</div>
+        <div class="sd">Open the Play Store, search for <b>ECINET</b> and install it to collect your 2025 data.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="sn">2</span>
+      <div>
+        <div class="st">Search your name</div>
+        <div class="sd">Find your entry in your voter list — search by your name, or more reliably by your <b>EPIC No</b>.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <span class="sn">3</span>
+      <div>
+        <div class="st">Note the SIR details</div>
+        <div class="sd">From your record, note your <b>AC (Assembly Constituency)</b>, <b>Part No (Booth No)</b> and <b>Serial No</b> — these are what SIR needs.</div>
+      </div>
+    </div>
+  </section>
+
   <!-- FORM -->
-  <section class="card">
+  <section class="card" id="checkerForm">
     <div class="section-head">
       <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
       <h2>Answer a few simple questions</h2>
@@ -377,6 +633,73 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="card" id="secFAQ">
+    <div class="section-head">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
+      <h2>Common FAQs by citizens</h2>
+    </div>
+    <p class="section-sub">Tap a question to see the answer.</p>
+
+    <details class="faq">
+      <summary><span class="qm">Q</span><span class="qtxt">Can my name be completely removed from the voter list without my knowledge?</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="ans">It cannot be legally removed without due process. But if a BLO visits your house multiple times and flags you as "permanently shifted" or "untraceable," your name will be marked for deletion on the draft list. This is exactly why reviewing the Draft Roll is critical.</div>
+    </details>
+
+    <details class="faq">
+      <summary><span class="qm">Q</span><span class="qtxt">Is Aadhaar mandatory for the SIR verification process?</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="ans">No. While Aadhaar is accepted and widely used as a supporting identity document, the ECI provides an expansive list of alternative government-approved documents for verification.</div>
+    </details>
+
+    <details class="faq">
+      <summary><span class="qm">Q</span><span class="qtxt">If my name is deleted during SIR, do I lose my Indian citizenship?</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="ans">No. The Supreme Court has clarified that the ECI's inquiry is strictly limited to deciding voter eligibility. Deletion from a voter roll is a bureaucratic correction about election lists and does not equate to a loss of citizenship. That said, persistent exclusion due to documentation doubts could require separate resolution under the Citizenship Act.</div>
+    </details>
+
+    <details class="faq">
+      <summary><span class="qm">Q</span><span class="qtxt">I recently moved to a new constituency. What should I do during SIR?</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="ans">Inform the visiting BLO or use the online portal to submit a migration request. SIR is designed precisely to remove your old entry and safely map your new residence into the updated registry.</div>
+    </details>
+
+    <details class="faq">
+      <summary><span class="qm">Q</span><span class="qtxt">The BLO visited, but the address I live at is different from the one on my voter ID. What should I do?</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="ans">
+        Don't panic and don't ignore it &mdash; a mismatched address is a common reason names get flagged. Tell the visiting BLO your correct current address and that your voter ID still shows the old one. Then get it formally corrected using <b>Form 8</b> (for correction of details or shifting of residence):
+        <ul class="ans-steps">
+          <li>If you have moved <b>within the same constituency</b>, the BLO can usually update it during the visit &mdash; confirm your current address on the form.</li>
+          <li>If you have moved to a <b>different constituency / city / state</b>, file Form 8 online (steps in the next question) or ask the BLO for the form, attaching an address proof.</li>
+          <li>Keep an address proof ready &mdash; Aadhaar, passport, a recent utility bill, bank passbook, or rent agreement.</li>
+          <li>Note the reference number you get, and check the Draft Roll later to confirm the correction went through.</li>
+        </ul>
+        <div class="ans-note">Use Form 8 for an address or detail correction. Form 6 is only for brand-new registration.</div>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary><span class="qm">Q</span><span class="qtxt">How do I update my address, name or other details using Form 8?</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="ans">
+        Form 8 is the single form for correcting your details (name, photo, date of birth, address, mobile number, etc.) or for shifting your residence. You can do it online for free:
+        <ul class="ans-steps">
+          <li>Go to the official Voters' Service Portal at <b>voters.eci.gov.in</b> (or open the <b>Voter Helpline App</b>).</li>
+          <li><b>Sign up</b> with your mobile number, email and captcha &mdash; or <b>log in</b> and verify with the OTP sent to your phone.</li>
+          <li>Click <b>"Fill Form 8"</b>, then choose <b>Self</b> (or <b>Other</b> to do it for someone else).</li>
+          <li>Enter your <b>EPIC (Voter ID) number</b> so your existing record loads.</li>
+          <li>Pick what you want to do: <b>shifting of residence</b> (new address) or <b>correction of entries</b> (name, father's name, DOB, photo, mobile, etc. &mdash; up to 4 particulars at once).</li>
+          <li>Fill in the corrected details and <b>upload a self-attested supporting document</b> (Aadhaar, passport, utility bill, bank passbook, etc.).</li>
+          <li>Enter your place and captcha, hit <b>Preview</b> to check everything, then <b>Submit</b>.</li>
+          <li>Save the <b>reference ID</b>. Track it later under <b>"Track Application Status"</b> on the portal.</li>
+        </ul>
+        <div class="ans-note">A BLO may visit to verify your new address. Updates typically reflect in the roll within about 2&ndash;4 weeks.</div>
+      </div>
+    </details>
+  </section>
+
   </div><!-- /pageChecker -->
 
   <!-- ============ PAGE 2: ACCEPTED DOCUMENTS ============ -->
@@ -425,36 +748,6 @@
       <div class="photos-note">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
         Also keep <b>2 colour photos</b> ready.
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="section-head">
-        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
-        <h2>How to get your 2025 details</h2>
-      </div>
-      <p class="section-sub">Your 2025 voter details are easy to collect on your phone. The voter ID itself shows EPIC No, Name, Father's Name, Date of Birth and Address — but for SIR you also need AC, Part No and Serial No.</p>
-
-      <div class="step-row">
-        <span class="sn">1</span>
-        <div>
-          <div class="st">Download the ECINET app</div>
-          <div class="sd">Open the Play Store, search for <b>ECINET</b> and install it to collect your 2025 data.</div>
-        </div>
-      </div>
-      <div class="step-row">
-        <span class="sn">2</span>
-        <div>
-          <div class="st">Search your name</div>
-          <div class="sd">Find your entry in your voter list — search by your name, or more reliably by your <b>EPIC No</b>.</div>
-        </div>
-      </div>
-      <div class="step-row">
-        <span class="sn">3</span>
-        <div>
-          <div class="st">Note the SIR details</div>
-          <div class="sd">From your record, note your <b>AC (Assembly Constituency)</b>, <b>Part No (Booth No)</b> and <b>Serial No</b> — these are what SIR needs.</div>
-        </div>
       </div>
     </section>
 
@@ -604,13 +897,47 @@
 
   // ---- Page navigation ----
   const pageChecker=document.getElementById('pageChecker'), pageDocs=document.getElementById('pageDocs');
+  const navbar=document.getElementById('navbar');
   function go(page){
     const docs = page==='docs';
     pageDocs.classList.toggle('active',docs);
     pageChecker.classList.toggle('active',!docs);
+    navbar.style.display = docs ? 'none' : '';   // hide section nav on documents sub-page
     window.scrollTo({top:0,behavior:'smooth'});
   }
   document.getElementById('backBtn').addEventListener('click',()=>go('checker'));
+  document.getElementById('toCheckerBtn').addEventListener('click',()=>{
+    document.getElementById('checkerForm').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
+  // ---- Section navbar: smooth scroll + scroll-spy ----
+  const navlinks=[...document.querySelectorAll('.navlink')];
+  const sectionIds=navlinks.map(b=>b.dataset.target);
+  navlinks.forEach(btn=>btn.addEventListener('click',()=>{
+    const el=document.getElementById(btn.dataset.target);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  }));
+  function setActive(id){
+    navlinks.forEach(b=>b.classList.toggle('active', b.dataset.target===id));
+  }
+  // scroll-spy: highlight the section currently under the navbar
+  function spy(){
+    const nbH = navbar.offsetHeight || 64;
+    const line = nbH + 24;            // a little below the navbar
+    let current = sectionIds[0];
+    for(const id of sectionIds){
+      const el=document.getElementById(id);
+      if(!el) continue;
+      if(el.getBoundingClientRect().top <= line) current = id;
+    }
+    setActive(current);
+  }
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(!ticking){ requestAnimationFrame(()=>{spy();ticking=false;}); ticking=true; }
+  },{passive:true});
+  window.addEventListener('resize',spy);
+  spy();
 </script>
 </body>
 </html>
